@@ -23,7 +23,7 @@ istio_docker() {
   local image_id
   image_id=$(docker images -f reference=istio/ci --format "{{.ID}}" | head -n1)
 
-  docker run -u root -it --cap-add=NET_ADMIN -v "${istio_dir}":/go/src/ "${image_id}" /bin/bash
+  docker run -u root -it --cap-add=NET_ADMIN -v "${istio_dir}":/go/src/ -v "${HOME}/workspace/istio-playground/scripts/":/scripts/ "${image_id}" /bin/bash
 }
 
 istio_docker "$@"
