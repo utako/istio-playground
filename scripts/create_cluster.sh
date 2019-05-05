@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+set -e
+
+CLUSTER_VERSION="1.12.6-gke.10"
+MTLS_DEFAULT="MTLS_PERMISSIVE"
+ZONE="us-central1-b"
+
+main() {
+  confirm
+
+  local cluster_name
+  cluster_name="${1}"
+
+  create_cluster "${cluster_name}"
+  get_cluster_credentials "${cluster_name}"
+}
+
+get_cluster_credentials() {
+  local cluster_name
+  cluster_name="${1}"
+
+  echo "Getting cluster credentials..."
+  gcloud container clusters get-credentials "${cluster_name}"
+}
+
+create_cluster() {
+  local cluster_name
+  cluster_name="${1}"
+
+  echo "Creating clusters..."
+  echo "Setting your mTLS mode to ${MTLS_DEFAULT}..."
+  echo "Using cluster version ${CLUSTER_VERSION} in zone ${ZONE}..."
+  gcloud beta container clusters create "${cluster_name}" \
+    --addons=Istio --istio-config=auth="${MTLS_DEFAULT}" \
+    --cluster-version="${CLUSTER_VERSION}" \
+    --machine-type=n1-standard-2 \
+    --num-nodes=4
+
+  echo "Done!"
+  echo "Listing clusters..."
+}
+
+set_security_defaults() {
+  cluster_name="${1}"
+  gcloud beta container clusters update "${cluster_name}" \
+    --update-addons=Istio=ENABLED --istio-config=auth=MTLS_PERMISSIVE
+}
+
+confirm() {
+  read -r -p "Are you sure? Have you set up your gcloud stuff (iam, gcloud project)? [y/N] " response
+  case $response in
+    [yY][eE][sS]|[yY])
+      return
+      ;;
+
+    *)
+      echo "Bailing out, you said no."
+      exit 187
+      ;;
+  esac
+}
+
+main "$@"
