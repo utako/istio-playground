@@ -14,3 +14,5 @@ mv ./kubectl /usr/local/bin/kubectl
 
 echo "DONE!"
 kubectl version
+
+make localTestEnv
