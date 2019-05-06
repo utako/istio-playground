@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set -ex
 
 CLUSTER_VERSION="1.12.6-gke.10"
 MTLS_DEFAULT="MTLS_PERMISSIVE"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu
+set -eux
 
 clone_if_not_exist() {
   local remote=$1

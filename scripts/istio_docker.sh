@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -ex
+
 istio_docker() {
   local istio_dir
   istio_dir="${1}"

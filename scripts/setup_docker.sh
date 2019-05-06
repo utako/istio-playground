@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -ex
+
 echo "Downloading and installing helm..."
 curl -L https://git.io/get_helm.sh | bash
 
@@ -14,5 +16,3 @@ mv ./kubectl /usr/local/bin/kubectl
 
 echo "DONE!"
 kubectl version
-
-make localTestEnv
