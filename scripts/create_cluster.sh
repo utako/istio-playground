@@ -14,6 +14,15 @@ main() {
 
   create_cluster "${cluster_name}"
   get_cluster_credentials "${cluster_name}"
+  confirm_installation
+}
+
+confirm_installation() {
+  echo "Ensure the following services are deployed: istio-citadel, istio-egressgateway, istio-pilot, istio-ingressgateway, istio-policy, istio-sidecar-injector, and istio-telemetry."
+  kubectl get service -n istio-system
+
+  echo "Ensure the corresponding Kubernetes pods are deployed and all containers are up and running: istio-pilot-*, istio-policy-*, istio-telemetry-*, istio-egressgateway-*, istio-ingressgateway-*, istio-sidecar-injector-*, and istio-citadel-*."
+  kubectl get pods -n istio-system
 }
 
 get_cluster_credentials() {
@@ -38,7 +47,6 @@ create_cluster() {
     --num-nodes=4
 
   echo "Done!"
-  echo "Listing clusters..."
 }
 
 set_security_defaults() {
