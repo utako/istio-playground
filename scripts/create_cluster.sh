@@ -18,11 +18,18 @@ main() {
 }
 
 confirm_installation() {
+  local context_name
   echo "Ensure the following services are deployed: istio-citadel, istio-egressgateway, istio-pilot, istio-ingressgateway, istio-policy, istio-sidecar-injector, and istio-telemetry."
   kubectl get service -n istio-system
 
   echo "Ensure the corresponding Kubernetes pods are deployed and all containers are up and running: istio-pilot-*, istio-policy-*, istio-telemetry-*, istio-egressgateway-*, istio-ingressgateway-*, istio-sidecar-injector-*, and istio-citadel-*."
   kubectl get pods -n istio-system
+
+  context_name=$(kubectl config current-context)
+  echo "Current context: ${context_name}"
+
+  echo "Setting context in kubeconfig in path: ${KUBECONFIG}..."
+  kubectl set-context "${context_name}"
 }
 
 get_cluster_credentials() {
