@@ -1,5 +1,10 @@
 # istio-playground
 
+## Getting Started
+1. I've set the GOPATH to ${ISTIO_PLAYGROUND_PATH} in [.envrc](.envrc), so you
+   can `direnv allow` if you so choose.
+1. [Clone Istio](scripts/get_istio.sh)
+
 ### Running Integration Tests
 There are a few ways to do this. For K8s environment integration tests, you can
 do the following:
