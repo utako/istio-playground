@@ -15,8 +15,4 @@ istio_path="${GOPATH}/src/istio.io/istio"
 
 clone_if_not_exist http://github.com/istio/istio "${istio_path}"
 
-echo "Getting dependencies..."
-pushd "${istio_path}"
-  dep ensure -v
-popd
 echo "Done!"
