@@ -2,9 +2,10 @@
 
 set -ex
 
-CLUSTER_VERSION="1.12.6-gke.10"
+CLUSTER_VERSION="1.13.7-gke.24"
 MTLS_DEFAULT="MTLS_PERMISSIVE"
 ZONE="us-central1-b"
+NUM_NODES=4
 
 main() {
   confirm
@@ -47,19 +48,19 @@ create_cluster() {
   echo "Creating clusters..."
   echo "Setting your mTLS mode to ${MTLS_DEFAULT}..."
   echo "Using cluster version ${CLUSTER_VERSION} in zone ${ZONE}..."
-  gcloud beta container clusters create "${cluster_name}" \
-    --addons=Istio --istio-config=auth="${MTLS_DEFAULT}" \
-    --cluster-version="${CLUSTER_VERSION}" \
-    --machine-type=n1-standard-2 \
-    --num-nodes=4
+
+  gcloud container clusters create "${cluster_name}" \
+  --cluster-version="${CLUSTER_VERSION}" \
+  --zone="${ZONE}" \
+  --machine-type=n1-standard-2 \
+  --num-nodes="${NUM_NODES}" \
+  --no-enable-legacy-authorization
+
+  gcloud container clusters get-credentials --zone="${ZONE}" "${cluster_name}"
+
+  kubectl create clusterrolebinding cluster-admin-binding --clusterrole=cluster-admin --user="$(gcloud config get-value core/account)"
 
   echo "Done!"
-}
-
-set_security_defaults() {
-  cluster_name="${1}"
-  gcloud beta container clusters update "${cluster_name}" \
-    --update-addons=Istio=ENABLED --istio-config=auth=MTLS_PERMISSIVE
 }
 
 confirm() {
